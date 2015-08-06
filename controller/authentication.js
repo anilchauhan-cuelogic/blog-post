@@ -4,6 +4,6 @@ var validator = require("../validator/authentication"),
 exports.login = {
 	validate : validator.login(),
     handler  : function (request, reply) {
-		
+		reply(request.payload);
     }	
 };
