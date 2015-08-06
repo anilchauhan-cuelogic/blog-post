@@ -1,27 +1,45 @@
-var validator = require("../validator/user"),
-	User = require('../models/user').User;
+var User = require('../models/user').User,
+	promise = require('bluebird'),
+	validator = promise.promisifyAll(require("../validator/user"));
 
 exports.register = {
 	validate : validator.register(),
     handler  : function (request, reply) {
         
-		validator.checkEmailExists(request, function (err, message){
-			
-			if(err) reply(err);
-			
-			if(message.status == 'available'){
+        validator.checkEmailExistsAsync(request)
+    			.then(function(){
+    				var user = new User(request.payload);
+    				user.saveAsync();
+    			})	
+    			.then(function() {
+					reply({status: 'success'});
+    			})
+    			.catch(function(err){
+    				//reply(err);
+    				console.log(err);
+    			});
+		
+    }	
+};
+
+exports.details = {
+	auth : {
+		strategy : 'token'
+	},
+    handler  : function (request, reply) {
+    	
+		User.findByIdAsync(request.params.id)
+			.then(function(user){
 				
-				var user = new User(request.payload);
-				
-				user.saveAsync()
-					.then(function() {
-						reply({status: 'success'});
-					})
-					.catch(function(e) {
-						reply(e);
-					});
-			}
-		});
+				if(!user) {
+					return reply('User not found');
+				}
+
+				reply(user);
+			})
+			.catch(function(e) {
+				reply({'msg' : 'Cannot fetch user','error' : e});
+			})
     }	
 };
 
