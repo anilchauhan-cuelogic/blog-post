@@ -41,7 +41,7 @@ exports.login = {
                     if(isMatch){
 
                     	var token = auth.createToken({'id' : user._id});
-                    	reply(token);
+                    	reply({'id':user._id, 'token': token});
                         
                     } else {
                         reply("Invalid password");

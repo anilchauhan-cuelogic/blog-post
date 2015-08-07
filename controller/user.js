@@ -9,10 +9,11 @@ exports.register = {
         validator.checkEmailExistsAsync(request)
     			.then(function(){
     				var user = new User(request.payload);
-    				user.saveAsync();
+    				return user.saveAsync();
     			})	
     			.then(function() {
-					reply({status: 'success'});
+					//reply({status: 'success'});
+					console.log({status: 'success'});
     			})
     			.catch(function(err){
     				//reply(err);
@@ -35,12 +36,17 @@ exports.details = {
 					return reply('User not found');
 				}
 
-				reply(user);
+				reply({
+					'id':user._id, 
+					'email':user.email, 
+					'firstname': user.name.firstname, 
+					'lastname': user.name.lastname
+				});
 			})
 			.catch(function(e) {
 				reply({'msg' : 'Cannot fetch user','error' : e});
 			})
-    }	
+    }
 };
 
 exports.list = {
@@ -49,6 +55,7 @@ exports.list = {
 			.execAsync()
 			.then(function(users) {
 				reply(users);
+				//return users;
 			})
 			.catch(function(e) {
 				reply({'msg' : 'Cannot fetch users','error' : e});

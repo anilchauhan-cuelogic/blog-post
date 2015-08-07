@@ -8,7 +8,7 @@ var schema = {
 	},
 	description : {
     	type : String,
-    	unique : true
+    	required : true
   	},
   	userId : {
   		type: Schema.Types.ObjectId,

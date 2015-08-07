@@ -11,10 +11,6 @@ server.connection({
     port: config.server.port
 });
 
-server.start(function () {
-    console.log('Server running at:', server.info.uri);
-});
-
 server.register(require('hapi-auth-jwt'), function (error) {
 
     server.auth.strategy('token', 'jwt', {
@@ -28,6 +24,10 @@ server.register(require('hapi-auth-jwt'), function (error) {
 server.auth.strategy('discard-token', 'jwt', {
     key: privateKey,
     validateFunc: auth.invalidate
+});
+
+server.start(function () {
+    console.log('Server running at:', server.info.uri);
 });
 
 server.route(routes.endpoints);

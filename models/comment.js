@@ -9,7 +9,7 @@ var schema = {
 	storyId : {
   		type: Schema.Types.ObjectId,
   		ref: 'Story',
-  		required: true 
+  		required: true
   	},
   	userId : {
   		type: Schema.Types.ObjectId,

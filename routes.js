@@ -11,8 +11,9 @@ exports.endpoints = [
     { method: 'GET',   path: '/user/{id}',    config: user.details },
     { method: 'POST',   path: '/story',    config: story.add },
     { method: 'GET',   path: '/liststories',    config: story.list },
-    { method: 'POST',   path: '/comment',    config: comment.add }
-    //{ method: 'GET',   path: '/story/{id}',    config: comment.get }
-
+    { method: 'POST',   path: '/comment',    config: comment.add },
+    { method: 'GET',   path: '/story/{id}',    config: comment.get },
+    { method: 'PUT',   path: '/story/{id}',    config: story.edit },
+    { method: 'DELETE',   path: '/story/{id}',    config: story.delete }
 ];
 
