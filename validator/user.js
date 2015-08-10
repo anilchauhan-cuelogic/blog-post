@@ -25,13 +25,10 @@ exports.checkEmailExists = function(request,callback) {
 
 			if(user) {
 
-				callback(null, {status: 'User with same email already exists'});
-				return;
-
+				callback(new Error('User with same email already exists'));
 			}
 
-			callback(null, {status: 'available'});
-			return;
+			callback();
 
 		})
 		.catch(function(e) {

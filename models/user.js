@@ -1,5 +1,6 @@
 var mongoose = require('../database').mongoose,
 	bcrypt = require('bcrypt'),
+	promise = require('bluebird'),
 	SALT_WORK_FACTOR = 10;
 
 var schema = {
@@ -56,16 +57,23 @@ userSchema.pre('save', function(next) {
 
 userSchema.methods.comparePassword = function(password, callback) {
 
-    bcrypt.compare(password, this.password, function(err, isMatch) {
+	//return new Promise(function(resolve, reject) {
 
-        if (err) return callback(err);
-        
-        callback(null, isMatch);
-    });
+		bcrypt.compare(password, this.password, function(err, isMatch) {
+
+	        if (err) return callback(err);
+	        
+	        callback(null, isMatch);
+    	});
+	//});
 };
+
+//userSchema.methods = promise.promisifyAll(userSchema.methods);
 
 //create the model
 var User = mongoose.model('User', userSchema);
 
 exports.User = User;
+
+
 
