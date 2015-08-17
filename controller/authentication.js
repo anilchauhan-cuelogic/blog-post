@@ -28,13 +28,13 @@ exports.login = {
 		// 		console.log(err);
 		// 		//reject(err);
 		// 	});
-		User.findOne({ email: request.payload.email }, function(err, user) {
+		User.findOne({ email: _.trim(request.payload.email) }, function(err, user) {
 
             if (err) throw err;
 
             if(user){
 
-                user.comparePassword(request.payload.password, function(err, isMatch) {
+                user.comparePassword(_.trim(request.payload.password), function(err, isMatch) {
 
                     if (err) throw err; 
 

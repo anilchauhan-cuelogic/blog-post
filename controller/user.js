@@ -1,6 +1,7 @@
 var User = require('../models/user').User,
 	promise = require('bluebird'),
-	validator = promise.promisifyAll(require("../validator/user"));
+	validator = promise.promisifyAll(require("../validator/user")),
+	_         = require('lodash');
 
 exports.register = {
 	validate : validator.register(),
@@ -12,12 +13,12 @@ exports.register = {
     				return user.saveAsync();
     			})	
     			.then(function() {
-					//reply({status: 'success'});
-					console.log({status: 'success'});
+					reply({status: 'success'});
+					//console.log({status: 'success'});
     			})
     			.catch(function(err){
-    				//reply(err);
-    				console.log(err);
+    				reply(err);
+    				//console.log(err);
     			});
 		
     }	
@@ -29,19 +30,17 @@ exports.details = {
 	},
     handler  : function (request, reply) {
     	
-		User.findByIdAsync(request.params.id)
+		User.findOne({'_id': request.params.id})
+			.lean()
+			.execAsync()
 			.then(function(user){
 				
-				if(!user) {
+				if(_.isEmpty(user)) {
 					return reply('User not found');
 				}
-
-				reply({
-					'id':user._id, 
-					'email':user.email, 
-					'firstname': user.name.firstname, 
-					'lastname': user.name.lastname
-				});
+				
+				reply(_.omit(user, 'password'));
+				
 			})
 			.catch(function(e) {
 				reply({'msg' : 'Cannot fetch user','error' : e});
@@ -52,10 +51,23 @@ exports.details = {
 exports.list = {
     handler  : function (request, reply) {
 		User.find({})
+			.lean()
 			.execAsync()
 			.then(function(users) {
-				reply(users);
-				//return users;
+
+				if(_.isEmpty(users) || !_.isArray(users)) {
+					return reply('User list is empty');
+				}
+
+				var usersList = _.chain(users)
+					  .sortBy('createdOn')
+					  .map(function(user) {
+					    	return _.omit(user, ['password', 'createdOn']);
+					  	})
+					  .value();
+
+				reply(usersList);
+				
 			})
 			.catch(function(e) {
 				reply({'msg' : 'Cannot fetch users','error' : e});

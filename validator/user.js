@@ -22,7 +22,7 @@ exports.checkEmailExists = function(request,callback) {
 	User.findOne({'email' : email})
 		.execAsync()
 		.then(function(user) {
-
+			
 			if(user) {
 
 				callback(new Error('User with same email already exists'));

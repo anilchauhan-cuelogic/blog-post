@@ -1,5 +1,6 @@
 var Comment = require('../models/comment').Comment,
-	validator = require("../validator/story");
+	validator = require("../validator/story"),
+	_         = require('lodash');
 
 exports.add = {
 	auth : {
@@ -8,7 +9,7 @@ exports.add = {
 	validate : validator.addComment(),
     handler  : function (request, reply) {
     	request.payload.userId = request.payload.userId = request.auth.credentials.userId;
-    	console.log(request.payload);
+    	
         var comment = new Comment(request.payload);
 		comment.saveAsync()
 			 .then(function(comment){
@@ -28,9 +29,13 @@ exports.get = {
     handler  : function (request, reply) {
     	
 		Comment.find({'storyId':request.params.id})
+			.lean()
 			.execAsync()
 			.then(function(comments) {
-				reply(comments);
+				var storyComments = _.map(comments, function(comment) {
+										return _.pick(comment, ['_id', 'comment', 'storyId']); 
+									});
+				reply(storyComments);
 			})
 			.catch(function(e) {
 				reply({'msg' : 'Cannot fetch story comments','error' : e});
