@@ -1,5 +1,6 @@
 var joi = require("joi"),
-	User = require('../models/user').User;
+	User = require('../models/user').User,
+	promise = require('bluebird');
 
 exports.register = function (){
 
@@ -15,25 +16,27 @@ exports.register = function (){
 	};	
 };
 
-exports.checkEmailExists = function(request,callback) {
+exports.checkEmailExists = function(request) {
 
-	var email = request.payload.email;
+	return new promise(function (resolve, reject){
+		
+		var email = request.payload.email;
+
+		User.findOne({'email' : email})
+			.execAsync()
+			.then(function(user) {
+				if(user) {
+					reject(new Error('User with same email already exists'));
+				} else {
+					var user = new User(request.payload);
+		    		user.saveAsync();
+					resolve(user);
+				}
+			})
+			.catch(function(err){
+				console.log('this is an error');
+				reject(err);
+			});
+	});
 	
-	User.findOne({'email' : email})
-		.execAsync()
-		.then(function(user) {
-			
-			if(user) {
-
-				callback(new Error('User with same email already exists'));
-			}
-
-			callback();
-
-		})
-		.catch(function(e) {
-
-			callback(e);
-
-		});
 };

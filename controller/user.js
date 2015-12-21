@@ -8,17 +8,11 @@ exports.register = {
     handler  : function (request, reply) {
         
         validator.checkEmailExistsAsync(request)
-    			.then(function(){
-    				var user = new User(request.payload);
-    				return user.saveAsync();
-    			})	
-    			.then(function() {
-					reply({status: 'success'});
-					//console.log({status: 'success'});
+    			.then(function(user){
+    				return reply({status : 'success'});
     			})
     			.catch(function(err){
-    				reply(err);
-    				//console.log(err);
+    				return reply(err);
     			});
 		
     }	
@@ -49,6 +43,9 @@ exports.details = {
 };
 
 exports.list = {
+	auth : {
+		scope : ['admin']
+	},
     handler  : function (request, reply) {
 		User.find({})
 			.lean()
