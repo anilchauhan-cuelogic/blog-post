@@ -3,8 +3,7 @@ var authentication = require('./controller/authentication');
 var story = require('./controller/story');
 var comment = require('./controller/comment');
 
-exports.endpoints = [
-    
+exports.endpoints = [  
     { method: 'POST',   path: '/register',    config: user.register },
     { method: 'GET',   path: '/listusers',    config: user.list },
     { method: 'POST',   path: '/login',       config: authentication.login },

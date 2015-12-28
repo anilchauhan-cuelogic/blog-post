@@ -8,7 +8,10 @@ var server = new hapi.Server();
 
 server.connection({ 
     host: config.server.host, 
-    port: config.server.port
+    port: config.server.port,
+    // routes: { 
+    //   cors: true 
+    // }
 });
 
 server.register(require('hapi-auth-jwt'), function (error) {

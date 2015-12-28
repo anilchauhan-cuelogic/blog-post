@@ -11,7 +11,8 @@ exports.register = function (){
 				'lastname' : joi.string().required()
 			}),
 			'email' : joi.string().email().required(),
-			'password' : joi.string().min(6).max(15).required()
+			'password' : joi.string().min(6).max(15).required(),
+			'scope' : joi.array().required()
 		} 
 	};	
 };

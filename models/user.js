@@ -23,6 +23,11 @@ var schema = {
 		type : String,
 		required : true
 	},
+	scope : {
+		type: String,
+        enum: ['Admin', 'User'],
+        required: true
+	},
 	createdOn : {
 		type : Date,
 		default: Date.now

@@ -20,7 +20,8 @@ exports.register = {
 
 exports.details = {
 	auth : {
-		strategy : 'token'
+		strategy : 'token',
+		scope : ['Admin']
 	},
     handler  : function (request, reply) {
     	
@@ -44,7 +45,8 @@ exports.details = {
 
 exports.list = {
 	auth : {
-		scope : ['admin']
+		scope : ['Admin'],
+		strategy : 'token'
 	},
     handler  : function (request, reply) {
 		User.find({})

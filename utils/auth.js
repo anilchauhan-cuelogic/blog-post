@@ -13,7 +13,7 @@ module.exports = {
 	invalidate : invalidate
 };
 
-client.auth(process.env.REDIS_PASSWORD, function (err) {
+client.auth(config.redis.password, function (err) {
     if (err) {
       console.log(err);    
     } 
@@ -25,7 +25,7 @@ client.on('connect', function() {
 
 function createToken(userObj) {
   
-	var authObj = {'userId' : userObj.id},
+	var authObj = {'userId' : userObj.id, 'scope' : userObj.scope},
 		token1 = jwt.sign(authObj, privateKey),
 		token2;
 
